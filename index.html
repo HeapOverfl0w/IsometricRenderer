@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="./style.css" />
+    </head>
+    <body>
+        <div id="textures" style="display: none">
+            <img src="./rsc/test.png"/>
+            <img src="./rsc/stone.png"/>
+            <img src="./rsc/testObject.png"/>
+            <img src="./rsc/testWall.png"/>
+        </div>
+        <canvas id="scene"></canvas>
+    </body>
+    <script src="./constants.js"></script>
+    <script src="./animation.js"></script>
+    <script src="./data.js"></script>
+    <script src="./camera.js"></script>
+    <script src="./level-object.js"></script>
+    <script src="./level.js"></script>
+    <script src="./renderer.js"></script>
+    <script src="./tile.js"></script>
+    <script src="./main.js"></script>
+    <script>
+        const data = new Data();
+        data.load();
+
+        const cvs = document.getElementById('scene');
+
+        window.onload = function () {
+            cvs.width = 640;
+            cvs.height = 400;
+            let aspectRatio = cvs.width / cvs.height;
+            let width = window.innerWidth;
+            if (window.innerWidth / aspectRatio > window.innerHeight) {
+            width = window.innerHeight * aspectRatio;
+            }
+            cvs.style.width = width + 'px';
+            cvs.style.height = width / aspectRatio + 'px';
+            let ctx = cvs.getContext('2d', { willReadFrequently: true });
+            ctx.fillStyle = "black";
+            ctx.font = '10px MS Gothic';
+
+            main = new Main(ctx, data);
+            main.start();
+        };
+
+        window.onresize = function () {
+            let aspectRatio = cvs.width / cvs.height;
+            let width = window.innerWidth;
+            if (window.innerWidth / aspectRatio > window.innerHeight) {
+            width = window.innerHeight * aspectRatio;
+            }
+            cvs.style.width = width + 'px';
+            cvs.style.height = width / aspectRatio + 'px';
+        };
+
+        document.addEventListener('mousemove', function (event) {
+            if (main != undefined)
+            main.handleMouseMove(event.clientX / cvs.clientWidth * cvs.width, event.clientY / cvs.clientHeight * cvs.height);
+        });
+
+        document.addEventListener("wheel", function (event) {
+            if (main != undefined)
+                main.handleMouseWheel(event.deltaY);
+        });
+
+        document.addEventListener("mouseup", function (event) {
+            if (main != undefined)
+                main.handleMouseClick();
+        });
+    </script>
+</html>
